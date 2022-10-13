@@ -83,30 +83,31 @@ pub struct Genesis {
     #[serde(rename = "mixHash")]
     pub mix_hash: H256,
     pub coinbase: Address,
+    #[serde(default)]
     pub alloc: HashMap<Address, GenesisAccount>,
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct TomlP2P {
-    #[serde(rename = "MaxPeers")]
+    #[serde(rename = "MaxPeers", default)]
     pub max_peers: u64,
-    #[serde(rename = "NoDiscovery")]
+    #[serde(rename = "NoDiscovery", default)]
     pub no_discovery: bool,
-    #[serde(rename = "StaticNodes")]
+    #[serde(rename = "StaticNodes", default)]
     pub static_nodes: Vec<String>,
-    #[serde(rename = "TrustedNodes")]
+    #[serde(rename = "TrustedNodes", default)]
     pub trusted_nodes: Vec<String>,
-    #[serde(rename = "ListenAddr")]
+    #[serde(rename = "ListenAddr", default)]
     pub listen_addr: String,
-    #[serde(rename = "EnableMsgEvents")]
+    #[serde(rename = "EnableMsgEvents", default)]
     pub enable_msg_events: bool,
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct TomlNode {
-    #[serde(rename = "BLSPasswordFile")]
+    #[serde(rename = "BLSPasswordFile", default)]
     pub bls_password_file: String,
-    #[serde(rename = "BLSWalletDir")]
+    #[serde(rename = "BLSWalletDir", default)]
     pub bls_wallet_dir: String,
     #[serde(rename = "P2P")]
     pub p2p: TomlP2P,

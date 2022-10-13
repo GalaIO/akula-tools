@@ -553,6 +553,9 @@ pub enum Seal {
         vanity: H256,
         score: BlockScore,
         signers: Vec<Address>,
+        #[serde(
+            skip_serializing_if = "Option::is_none",
+        )]
         bls_pub_keys: Option<Vec<BLSPublicKey>>,
     },
     Clique {
