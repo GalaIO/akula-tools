@@ -1,14 +1,14 @@
-use std::collections::{BTreeMap, BTreeSet};
-use std::fs;
-use std::path::Path;
-use anyhow::bail;
-use akula_tools::models::*;
-use akula_tools::models::chainspec::*;
+use akula_tools::models::{chainspec::*, *};
+use std::{
+    collections::{BTreeMap, BTreeSet},
+    fs,
+    path::Path,
+};
 
+use akula_tools::models::bls::*;
 use clap::Parser;
 use ethereum_types::{Address, U256};
 use hex_literal::hex;
-use akula_tools::models::bls::*;
 use std::str::FromStr;
 
 #[derive(Parser)]
@@ -35,9 +35,9 @@ fn main() -> anyhow::Result<()> {
         consensus: ConsensusParams {
             seal_verification: SealVerificationParams::Parlia {
                 period: genesis.config.parlia.period,
-                epoch: genesis.config.parlia.epoch
+                epoch: genesis.config.parlia.epoch,
             },
-            eip1559_block: None
+            eip1559_block: None,
         },
         upgrades: Upgrades {
             homestead: genesis.config.homestead_block,
@@ -59,7 +59,7 @@ fn main() -> anyhow::Result<()> {
             euler: genesis.config.euler_block,
             gibbs: genesis.config.gibbs_block,
             boneh: genesis.config.boneh_block,
-            lynn: genesis.config.lynn_block
+            lynn: genesis.config.lynn_block,
         },
         params: Params {
             chain_id: ChainId(genesis.config.chain_id),
@@ -72,35 +72,45 @@ fn main() -> anyhow::Result<()> {
             gas_limit: genesis.gas_limit.as_u64(),
             timestamp: genesis.timestamp.as_u64(),
             seal: Seal::Unknown,
-            base_fee_per_gas: None
+            base_fee_per_gas: None,
         },
         contracts: Default::default(),
         balances: Default::default(),
         p2p: P2PParams {
             bootnodes: config.node.p2p.static_nodes,
-            dns: None
-        }
+            dns: None,
+        },
     };
 
     // parse contracts and balances
     let mut contracts = BTreeMap::new();
     let mut balances = BTreeMap::new();
     for (addr, account) in genesis.alloc {
-        balances.insert(addr, if account.balance.starts_with("0x") {
-            U256::from_str(&account.balance)?
-        } else {
-            U256::from_dec_str(&account.balance)?
-        });
+        balances.insert(
+            addr,
+            if account.balance.starts_with("0x") {
+                U256::from_str(&account.balance)?
+            } else {
+                U256::from_dec_str(&account.balance)?
+            },
+        );
         if let Some(code) = account.code {
-            contracts.insert(addr, Contract::Contract {
-                code: hex::decode(code.strip_prefix("0x").unwrap_or(&code))
-                    .map_err(|e| e)?
-                    .into()
-            });
+            contracts.insert(
+                addr,
+                Contract::Contract {
+                    code: hex::decode(code.strip_prefix("0x").unwrap_or(&code))
+                        .map_err(|e| e)?
+                        .into(),
+                },
+            );
         }
     }
-    chain_spec.contracts.insert(chain_spec.genesis.number, contracts);
-    chain_spec.balances.insert(chain_spec.genesis.number, balances);
+    chain_spec
+        .contracts
+        .insert(chain_spec.genesis.number, contracts);
+    chain_spec
+        .balances
+        .insert(chain_spec.genesis.number, balances);
 
     // set base_fee_per_gas
     if chain_spec.is_london(&chain_spec.genesis.number) {
@@ -117,7 +127,9 @@ fn main() -> anyhow::Result<()> {
         let count = val_bytes.len() / EXTRA_VALIDATOR_LEN;
         for i in 0..count {
             let start = i * EXTRA_VALIDATOR_LEN;
-            signers.push(Address::from_slice(&val_bytes[start..start + EXTRA_VALIDATOR_LEN]));
+            signers.push(Address::from_slice(
+                &val_bytes[start..start + EXTRA_VALIDATOR_LEN],
+            ));
         }
     } else {
         let mut tmp = Vec::new();
@@ -145,15 +157,18 @@ fn main() -> anyhow::Result<()> {
         } else if genesis.difficulty.as_u64() == 2 {
             BlockScore::InTurn
         } else {
-            return bail!("wrong parlia difficulty");
+            panic!("wrong parlia difficulty");
         },
         signers,
-        bls_pub_keys: bls_keys
+        bls_pub_keys: bls_keys,
     };
 
     let output = opt.output.unwrap_or(String::from("."));
     let path = Path::new(&output).join(format!("{}.ron", chain_spec.name));
-    fs::write(&path, ron::ser::to_string_pretty(&chain_spec, ron::ser::PrettyConfig::new())?)?;
+    fs::write(
+        &path,
+        ron::ser::to_string_pretty(&chain_spec, ron::ser::PrettyConfig::new())?,
+    )?;
     println!("akula's chain spec saved in path: {:?}", &path.to_str());
     Ok(())
 }

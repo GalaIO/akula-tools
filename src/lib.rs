@@ -1,7 +1,4 @@
-#![feature(
-step_trait
-)]
+#![feature(step_trait)]
 
 pub mod models;
 pub(crate) mod util;
-

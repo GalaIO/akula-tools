@@ -1,19 +1,16 @@
-use super::{bls::*};
-use crate::{util::*};
+use super::bls::*;
+use crate::util::*;
 use bytes::Bytes;
-use serde::*;
-use std::{
-    collections::{BTreeMap, BTreeSet},
-    time::Duration,
-};
-use ethereum_types::{Address, H256, H64, U256, U64};
-pub use ethnum::prelude::*;
 use derive_more::*;
+use ethereum_types::{Address, H256, H64, U256};
+pub use ethnum::prelude::*;
 use fastrlp::*;
 use serde::{Deserialize, Serialize};
 use std::{
+    collections::{BTreeMap, BTreeSet},
     iter::Step,
     ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Rem, RemAssign, Sub, SubAssign},
+    time::Duration,
 };
 
 /// Fixed number of extra-data prefix bytes reserved for signer vanity
@@ -279,25 +276,21 @@ impl DifficultyBomb {
 pub struct ConsensusParams {
     pub seal_verification: SealVerificationParams,
     #[serde(
-    default,
-    skip_serializing_if = "Option::is_none",
-    with = "::serde_with::rust::unwrap_or_skip"
+        default,
+        skip_serializing_if = "Option::is_none",
+        with = "::serde_with::rust::unwrap_or_skip"
     )]
     pub eip1559_block: Option<BlockNumber>,
 }
 
 impl ConsensusParams {
-
     pub fn is_parlia(&self) -> bool {
         match self.seal_verification {
-            SealVerificationParams::Parlia { .. } => {
-                true
-            },
-            _ => false
+            SealVerificationParams::Parlia { .. } => true,
+            _ => false,
         }
     }
 }
-
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub enum SealVerificationParams {
@@ -318,119 +311,118 @@ pub enum SealVerificationParams {
 #[derive(Clone, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Upgrades {
     #[serde(
-    default,
-    skip_serializing_if = "Option::is_none",
-    with = "::serde_with::rust::unwrap_or_skip"
+        default,
+        skip_serializing_if = "Option::is_none",
+        with = "::serde_with::rust::unwrap_or_skip"
     )]
     pub homestead: Option<BlockNumber>,
     #[serde(
-    default,
-    skip_serializing_if = "Option::is_none",
-    with = "::serde_with::rust::unwrap_or_skip"
+        default,
+        skip_serializing_if = "Option::is_none",
+        with = "::serde_with::rust::unwrap_or_skip"
     )]
     pub tangerine: Option<BlockNumber>,
     #[serde(
-    default,
-    skip_serializing_if = "Option::is_none",
-    with = "::serde_with::rust::unwrap_or_skip"
+        default,
+        skip_serializing_if = "Option::is_none",
+        with = "::serde_with::rust::unwrap_or_skip"
     )]
     pub spurious: Option<BlockNumber>,
     #[serde(
-    default,
-    skip_serializing_if = "Option::is_none",
-    with = "::serde_with::rust::unwrap_or_skip"
+        default,
+        skip_serializing_if = "Option::is_none",
+        with = "::serde_with::rust::unwrap_or_skip"
     )]
     pub byzantium: Option<BlockNumber>,
     #[serde(
-    default,
-    skip_serializing_if = "Option::is_none",
-    with = "::serde_with::rust::unwrap_or_skip"
+        default,
+        skip_serializing_if = "Option::is_none",
+        with = "::serde_with::rust::unwrap_or_skip"
     )]
     pub constantinople: Option<BlockNumber>,
     #[serde(
-    default,
-    skip_serializing_if = "Option::is_none",
-    with = "::serde_with::rust::unwrap_or_skip"
+        default,
+        skip_serializing_if = "Option::is_none",
+        with = "::serde_with::rust::unwrap_or_skip"
     )]
     pub petersburg: Option<BlockNumber>,
     #[serde(
-    default,
-    skip_serializing_if = "Option::is_none",
-    with = "::serde_with::rust::unwrap_or_skip"
+        default,
+        skip_serializing_if = "Option::is_none",
+        with = "::serde_with::rust::unwrap_or_skip"
     )]
     pub istanbul: Option<BlockNumber>,
     #[serde(
-    default,
-    skip_serializing_if = "Option::is_none",
-    with = "::serde_with::rust::unwrap_or_skip"
+        default,
+        skip_serializing_if = "Option::is_none",
+        with = "::serde_with::rust::unwrap_or_skip"
     )]
     pub berlin: Option<BlockNumber>,
     #[serde(
-    default,
-    skip_serializing_if = "Option::is_none",
-    with = "::serde_with::rust::unwrap_or_skip"
+        default,
+        skip_serializing_if = "Option::is_none",
+        with = "::serde_with::rust::unwrap_or_skip"
     )]
     pub london: Option<BlockNumber>,
     #[serde(
-    default,
-    skip_serializing_if = "Option::is_none",
-    with = "::serde_with::rust::unwrap_or_skip"
+        default,
+        skip_serializing_if = "Option::is_none",
+        with = "::serde_with::rust::unwrap_or_skip"
     )]
     pub paris: Option<BlockNumber>,
 
     /// bsc forks starts
     #[serde(
-    default,
-    skip_serializing_if = "Option::is_none",
-    with = "::serde_with::rust::unwrap_or_skip"
+        default,
+        skip_serializing_if = "Option::is_none",
+        with = "::serde_with::rust::unwrap_or_skip"
     )]
     pub ramanujan: Option<BlockNumber>,
     #[serde(
-    default,
-    skip_serializing_if = "Option::is_none",
-    with = "::serde_with::rust::unwrap_or_skip"
+        default,
+        skip_serializing_if = "Option::is_none",
+        with = "::serde_with::rust::unwrap_or_skip"
     )]
     pub niels: Option<BlockNumber>,
     #[serde(
-    default,
-    skip_serializing_if = "Option::is_none",
-    with = "::serde_with::rust::unwrap_or_skip"
+        default,
+        skip_serializing_if = "Option::is_none",
+        with = "::serde_with::rust::unwrap_or_skip"
     )]
     pub mirrorsync: Option<BlockNumber>,
     #[serde(
-    default,
-    skip_serializing_if = "Option::is_none",
-    with = "::serde_with::rust::unwrap_or_skip"
+        default,
+        skip_serializing_if = "Option::is_none",
+        with = "::serde_with::rust::unwrap_or_skip"
     )]
     pub bruno: Option<BlockNumber>,
     #[serde(
-    default,
-    skip_serializing_if = "Option::is_none",
-    with = "::serde_with::rust::unwrap_or_skip"
+        default,
+        skip_serializing_if = "Option::is_none",
+        with = "::serde_with::rust::unwrap_or_skip"
     )]
     pub euler: Option<BlockNumber>,
     #[serde(
-    default,
-    skip_serializing_if = "Option::is_none",
-    with = "::serde_with::rust::unwrap_or_skip"
+        default,
+        skip_serializing_if = "Option::is_none",
+        with = "::serde_with::rust::unwrap_or_skip"
     )]
     pub gibbs: Option<BlockNumber>,
     #[serde(
-    default,
-    skip_serializing_if = "Option::is_none",
-    with = "::serde_with::rust::unwrap_or_skip"
+        default,
+        skip_serializing_if = "Option::is_none",
+        with = "::serde_with::rust::unwrap_or_skip"
     )]
     pub boneh: Option<BlockNumber>,
     #[serde(
-    default,
-    skip_serializing_if = "Option::is_none",
-    with = "::serde_with::rust::unwrap_or_skip"
+        default,
+        skip_serializing_if = "Option::is_none",
+        with = "::serde_with::rust::unwrap_or_skip"
     )]
     pub lynn: Option<BlockNumber>,
 }
 
 impl ChainSpec {
-
     pub fn is_on_ramanujan(&self, number: &BlockNumber) -> bool {
         is_on_forked(self.upgrades.ramanujan, number)
     }
@@ -504,12 +496,8 @@ impl ChainSpec {
 #[inline]
 pub fn is_forked(forked_op: Option<BlockNumber>, current: &BlockNumber) -> bool {
     match forked_op {
-        None => {
-            false
-        }
-        Some(forked) => {
-            *current >= forked
-        }
+        None => false,
+        Some(forked) => *current >= forked,
     }
 }
 
@@ -517,12 +505,8 @@ pub fn is_forked(forked_op: Option<BlockNumber>, current: &BlockNumber) -> bool 
 #[inline]
 pub fn is_on_forked(fork_op: Option<BlockNumber>, current: &BlockNumber) -> bool {
     match fork_op {
-        None => {
-            false
-        }
-        Some(fork) => {
-            *current == fork
-        }
+        None => false,
+        Some(fork) => *current == fork,
     }
 }
 
@@ -553,9 +537,7 @@ pub enum Seal {
         vanity: H256,
         score: BlockScore,
         signers: Vec<Address>,
-        #[serde(
-            skip_serializing_if = "Option::is_none",
-        )]
+        #[serde(skip_serializing_if = "Option::is_none")]
         bls_pub_keys: Option<Vec<BLSPublicKey>>,
     },
     Clique {
@@ -563,7 +545,7 @@ pub enum Seal {
         score: BlockScore,
         signers: Vec<Address>,
     },
-    Unknown
+    Unknown,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
@@ -574,9 +556,9 @@ pub struct Genesis {
     pub timestamp: u64,
     pub seal: Seal,
     #[serde(
-    default,
-    skip_serializing_if = "Option::is_none",
-    with = "::serde_with::rust::unwrap_or_skip"
+        default,
+        skip_serializing_if = "Option::is_none",
+        with = "::serde_with::rust::unwrap_or_skip"
     )]
     pub base_fee_per_gas: Option<U256>,
 }
@@ -614,10 +596,9 @@ pub struct P2PParams {
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub bootnodes: Vec<String>,
     #[serde(
-    default,
-    skip_serializing_if = "Option::is_none",
-    with = "::serde_with::rust::unwrap_or_skip"
+        default,
+        skip_serializing_if = "Option::is_none",
+        with = "::serde_with::rust::unwrap_or_skip"
     )]
     pub dns: Option<String>,
 }
-

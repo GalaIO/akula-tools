@@ -1,5 +1,5 @@
 use fastrlp::*;
-use fixed_hash::{construct_fixed_hash};
+use fixed_hash::construct_fixed_hash;
 
 /// length of BLS public key
 pub const BLS_PUBLIC_KEY_LEN: usize = 48;
@@ -7,16 +7,16 @@ pub const BLS_PUBLIC_KEY_LEN: usize = 48;
 pub const BLS_SIGNATURE_LEN: usize = 96;
 
 construct_fixed_hash! {
-	pub struct BLSPublicKey(BLS_PUBLIC_KEY_LEN);
+    pub struct BLSPublicKey(BLS_PUBLIC_KEY_LEN);
 }
 
 construct_fixed_hash! {
-	pub struct BLSSignature(BLS_SIGNATURE_LEN);
+    pub struct BLSSignature(BLS_SIGNATURE_LEN);
 }
 
 mod serde {
     use super::*;
-    use impl_serde::{impl_fixed_hash_serde};
+    use impl_serde::impl_fixed_hash_serde;
 
     impl_fixed_hash_serde!(BLSPublicKey, BLS_PUBLIC_KEY_LEN);
     impl_fixed_hash_serde!(BLSSignature, BLS_SIGNATURE_LEN);

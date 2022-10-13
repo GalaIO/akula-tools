@@ -1,4 +1,3 @@
-
 use bytes::Bytes;
 use serde::{
     de::{self, Error},
@@ -11,8 +10,8 @@ pub mod hexbytes {
     use super::*;
 
     pub fn deserialize<'de, D>(deserializer: D) -> Result<Bytes, D::Error>
-        where
-            D: de::Deserializer<'de>,
+    where
+        D: de::Deserializer<'de>,
     {
         let s = String::deserialize(deserializer)?;
 
@@ -22,13 +21,12 @@ pub mod hexbytes {
     }
 
     pub fn serialize<S>(b: &Bytes, serializer: S) -> Result<S::Ok, S::Error>
-        where
-            S: Serializer,
+    where
+        S: Serializer,
     {
         serializer.serialize_str(&format!("0x{}", hex::encode(b)))
     }
 }
-
 
 pub mod duration_as_millis {
     use super::*;
@@ -36,15 +34,15 @@ pub mod duration_as_millis {
     use std::time::Duration;
 
     pub fn deserialize<'de, D>(deserializer: D) -> Result<Duration, D::Error>
-        where
-            D: de::Deserializer<'de>,
+    where
+        D: de::Deserializer<'de>,
     {
         Ok(Duration::from_millis(u64::deserialize(deserializer)?))
     }
 
     pub fn serialize<S>(d: &Duration, serializer: S) -> Result<S::Ok, S::Error>
-        where
-            S: Serializer,
+    where
+        S: Serializer,
     {
         serializer.serialize_u64(d.as_millis() as u64)
     }

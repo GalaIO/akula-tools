@@ -1,9 +1,8 @@
-use std::collections::HashMap;
-use serde::{Deserialize, Serialize};
-use bytes::{Bytes};
+use crate::{models::chainspec::BlockNumber, util::*};
+use bytes::Bytes;
 use ethereum_types::{Address, H256, U256};
-use crate::{util::*};
-use crate::models::chainspec::BlockNumber;
+use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
 
 #[derive(Clone, Copy, Debug, Deserialize, Serialize)]
 pub struct ParliaConfig {
@@ -121,8 +120,8 @@ pub struct TomlConfig {
 
 #[cfg(test)]
 mod tests {
-    use std::ops::Deref;
     use super::*;
+    use std::ops::Deref;
 
     #[test]
     fn parse_toml_config() {
@@ -158,7 +157,10 @@ MaxBytesSize = 10485760
 Level = "info"
 FileRoot = """#;
         let conf: TomlConfig = toml::from_str(s).unwrap();
-        assert_eq!("/Users/jacksen/OtherProjects/bsc-deploy/clusterNode/node1/blspassword.txt", conf.node.bls_password_file);
+        assert_eq!(
+            "/Users/jacksen/OtherProjects/bsc-deploy/clusterNode/node1/blspassword.txt",
+            conf.node.bls_password_file
+        );
         assert_eq!("enode://2e9ca9c58a47a80587c936b1a4846f84aa6ee5b31062321cd56684ff97957e12e3d867800ed9540201554754d1effed3e249d2c11835aba3bfebd0a19018c70d@127.0.0.1:30333", conf.node.p2p.static_nodes[0]);
         assert_eq!("enode://624e893ae9c9f7a1173e0a46501dacabe374f3ffab327e753f496ba2fe6b0e6fb10e90d9e00500623a2451d0bbf9d1e50fbfa7379f5280c71c88ca6ff7c22163@127.0.0.1:30336", conf.node.p2p.static_nodes[3]);
     }
