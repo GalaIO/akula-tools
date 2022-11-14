@@ -94,6 +94,8 @@ pub struct TomlP2P {
     pub no_discovery: bool,
     #[serde(rename = "StaticNodes", default)]
     pub static_nodes: Vec<String>,
+    #[serde(rename = "BootstrapNodes", default)]
+    pub bootstrap_nodes: Vec<String>,
     #[serde(rename = "TrustedNodes", default)]
     pub trusted_nodes: Vec<String>,
     #[serde(rename = "ListenAddr", default)]
@@ -164,6 +166,7 @@ FileRoot = """#;
         assert_eq!("enode://2e9ca9c58a47a80587c936b1a4846f84aa6ee5b31062321cd56684ff97957e12e3d867800ed9540201554754d1effed3e249d2c11835aba3bfebd0a19018c70d@127.0.0.1:30333", conf.node.p2p.static_nodes[0]);
         assert_eq!("enode://624e893ae9c9f7a1173e0a46501dacabe374f3ffab327e753f496ba2fe6b0e6fb10e90d9e00500623a2451d0bbf9d1e50fbfa7379f5280c71c88ca6ff7c22163@127.0.0.1:30336", conf.node.p2p.static_nodes[3]);
     }
+
 
     #[test]
     fn parse_genesis() {
@@ -255,7 +258,7 @@ FileRoot = """#;
 }"#;
         let genesis: Genesis = serde_json::from_str(s).unwrap();
         assert_eq!(200, genesis.config.parlia.epoch);
-        assert_eq!(0, genesis.config.boneh_block.unwrap());
+        assert_eq!(0, genesis.config.boneh_block.unwrap().0);
         assert_eq!("000000000000000000000000000000000000000000000000000000000000000005e0190729ea647015ebc85e54aef5a6a31aaa058c85e6972fc98cd3c81d64d40e325acfed44365b97a7567a27939c14dbc7512ddcf54cb1284eb637cfa308ae4e00cb5588a9f40bc72719b8a6ca17bfdbb681241e7edbc3658addebd6ef7609df215e006987040d0a643858f3a4d791beaa77177d67529160e645fac54f0d8acdcd5a088393cb6681df7d472b20084f22e2fd68fac859031b6134595a89abcc45efe76bec679ca35c27adbd66fb9712a278e3c8530ab25cfaf997765aee574f5c5745dbb873dbf7e961684347e828eff34af6960478d6b3dbbfe08c681d8673f3a1484f2b97137fb957daad064ca6cbe5b99549249ceb51f42e928ec091f94fed642ddffe3a9916769538decd0a9937bfd7b7a69df33b2f905a480a8ece0fbc51bdfe0d068b20e24ad933b9af0a55a6d34a08e10b832a10f389154dc0dec79b63a38b79ea2f0d9f4fa664b3c06b1b2437cb58236f0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000", hex::encode(genesis.extra_data.deref()));
         // println!("{}", serde_json::to_string(&genesis).unwrap());
     }

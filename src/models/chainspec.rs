@@ -595,6 +595,8 @@ pub enum Precompile {
 pub struct P2PParams {
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub bootnodes: Vec<String>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub static_peers: Vec<String>,
     #[serde(
         default,
         skip_serializing_if = "Option::is_none",
